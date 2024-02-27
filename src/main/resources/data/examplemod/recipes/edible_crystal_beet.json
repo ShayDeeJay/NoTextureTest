@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " # ",
+    "#*#",
+    " # "
+  ],
+  "key": {
+    "#": {
+      "item": "ediblecrystals:edible_crystal"
+    },
+    "*": {
+      "item": "minecraft:beetroot"
+    }
+  },
+  "result": {
+    "item": "ediblecrystals:edible_crystal_beet"
+  }
+}

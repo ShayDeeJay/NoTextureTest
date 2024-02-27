@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "ediblecrystals:edible_crystal"
+    }
+  ],
+  "result": {
+    "item": "ediblecrystals:edible_crystal_fragment",
+    "count": 8
+  }
+}
