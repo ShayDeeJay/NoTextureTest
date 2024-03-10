@@ -5,7 +5,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.*;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -14,7 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -28,15 +31,12 @@ import org.edible_crystals_mod.utils.tags.ModTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CrystalInfusionTableEntity extends BaseContainerBlockEntity implements/* MenuProvider*/ WorldlyContainer {
+public class CrystalInfusionTableEntity extends BlockEntity implements MenuProvider {
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(3);
     private static final int INFUSE_SLOT = 0;
     private static final int UNFED_SLOT = 1;
     private static final int INFUSED_OUTPUT_SLOT = 2;
-
-    private static final int[] SLOTS_FOR_DOWN = new int[2];
-    private static final int[] SLOTS_FOR_DOWN2= new int[2];
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     protected final ContainerData data;
     private int progress = 0;
@@ -112,14 +112,16 @@ public class CrystalInfusionTableEntity extends BaseContainerBlockEntity impleme
     }
 
     @Override
-    protected Component getDefaultName() {
+    public Component getDisplayName() {
         return Component.translatable("block.ediblecrystals.infusion_table");
     }
 
+    @Nullable
     @Override
-    protected AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory) {
-        return new InfusionTableMenu(pContainerId, pInventory, this, this.data);
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new InfusionTableMenu(pContainerId, pPlayerInventory, this, this.data);
     }
+
 
     @Override
     public void load(CompoundTag pTag) {
@@ -234,62 +236,6 @@ public class CrystalInfusionTableEntity extends BaseContainerBlockEntity impleme
 
     private void increaseCraftingProgress() {
         progress++;
-    }
-
-
-    @Override
-    public int[] getSlotsForFace(Direction pSide) {
-        return pSide == Direction.DOWN ? SLOTS_FOR_DOWN : SLOTS_FOR_DOWN2;
-    }
-
-    @Override
-    public boolean canPlaceItemThroughFace(int pIndex, ItemStack pItemStack, @Nullable Direction pDirection) {
-        return false;
-    }
-
-    @Override
-    public boolean canTakeItemThroughFace(int pIndex, ItemStack pStack, Direction pDirection) {
-        return pDirection == Direction.DOWN && pIndex != INFUSE_SLOT && pIndex != UNFED_SLOT;
-    }
-
-    @Override
-    public int getContainerSize() {
-        return this.itemHandler.getSlots();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public ItemStack getItem(int pSlot) {
-        return pSlot >= 0 && pSlot < this.itemHandler.getSlots() ? this.itemHandler.getStackInSlot(pSlot) : ItemStack.EMPTY;
-    }
-
-    @Override
-    public ItemStack removeItem(int pSlot, int pAmount) {
-        return this.itemHandler.extractItem(pSlot, pAmount, false);
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int pSlot) {
-        return this.itemHandler.getStackInSlot(pSlot);
-    }
-
-    @Override
-    public void setItem(int pSlot, ItemStack pStack) {
-
-    }
-
-    @Override
-    public boolean stillValid(Player pPlayer) {
-        return Container.stillValidBlockEntity(this, pPlayer);
-    }
-
-    @Override
-    public void clearContent() {
-
     }
 }
 
