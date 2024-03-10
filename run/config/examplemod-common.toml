@@ -1,4 +1,4 @@
-#Whether to log the dirt block on common setup
+#Whether to log the dirt blockstates on common setup
 logDirtBlock = true
 #A magic number
 #Range: > 0

@@ -6,7 +6,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.edible_crystals_mod.untitled.EdibleCrystalMod;
+import org.edible_crystals_mod.EdibleCrystalMod;
 
 public class ModLootModifiers {
     public static final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIER_SERIALIZERS =

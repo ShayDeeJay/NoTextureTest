@@ -7,7 +7,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+import org.edible_crystals_mod.EdibleCrystalMod;
 import org.edible_crystals_mod.block.ModBlocks;
+import org.edible_crystals_mod.items.CrystalItems;
 
 public class ModCreativeModTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TAB =
@@ -22,6 +24,7 @@ public class ModCreativeModTabs {
                         pOutput.accept(CrystalItems.EDIBLE_CRYSTAL_CARROT.get());
                         pOutput.accept(CrystalItems.EDIBLE_CRYSTAL_BEET.get());
                         pOutput.accept(CrystalItems.EDIBLE_CRYSTAL_GOLDEN_APPLE.get());
+                        pOutput.accept(CrystalItems.EDIBLE_CRYSTAL_GOLDEN_APPLE_JUICED.get());
                         pOutput.accept(ModBlocks.CRYSTAL_INFUSION_TABLE.get());
                    })
                     .build()

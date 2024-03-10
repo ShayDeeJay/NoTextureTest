@@ -1,6 +1,5 @@
 package org.edible_crystals_mod.screen;
 
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -9,9 +8,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.SlotItemHandler;
 import org.edible_crystals_mod.block.ModBlocks;
 import org.edible_crystals_mod.block.entity.CrystalInfusionTableEntity;
+import org.edible_crystals_mod.utils.inventory_slots.InfuseSlot;
+import org.edible_crystals_mod.utils.inventory_slots.OutputSlot;
+import org.edible_crystals_mod.utils.inventory_slots.UnFedSlot;
 
 public class InfusionTableMenu extends AbstractContainerMenu {
     public final CrystalInfusionTableEntity blockEntity;
@@ -19,24 +20,50 @@ public class InfusionTableMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public InfusionTableMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(3));
     }
 
     public InfusionTableMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(ModMenuTypes.CRYSTAL_INFUSION_TABLE.get(), pContainerId);
-        checkContainerSize(inv, 2);
+        // Call superclass constructor with the specified container type and container ID
+        super(ModMenuTypes.CRYSTAL_INFUSION_MENU.get(), pContainerId);
+
+        // Check if the inventory size is as expected (in this case, 3 slots)
+        checkContainerSize(inv, 4);
+
+        // Cast the BlockEntity to CrystalInfusionTableEntity and assign it to the blockEntity field
         blockEntity = ((CrystalInfusionTableEntity) entity);
+
+        // Get the level (world) associated with the player's inventory
         this.level = inv.player.level();
+
+        // Store the ContainerData object
         this.data = data;
 
-        addPlayerInventory(inv);
-        addPlayerHotbar(inv);
+        // player's 3 inventory rows
+        for (int playerInvY = 0; playerInvY < 3; playerInvY++) {
 
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
-            this.addSlot(new SlotItemHandler(iItemHandler, 0, 80, 11));
-            this.addSlot(new SlotItemHandler(iItemHandler, 1, 80, 59));
-        });
+            for (int playerInvX = 0; playerInvX < 9; playerInvX++) {
 
+                this.addSlot(new Slot(inv, playerInvX + playerInvY * 9 + 9, 8 + playerInvX * 18, 84 + playerInvY * 18));
+            }
+        }
+
+        // Add hot-bar slots.
+        for (int hotbarX = 0; hotbarX < 9; hotbarX++) {
+            this.addSlot(new Slot(inv, hotbarX, 8 + hotbarX * 18, 142));
+        }
+
+        // Retrieve the IItemHandler capability from the blockEntity
+        this.blockEntity
+            .getCapability(ForgeCapabilities.ITEM_HANDLER)
+            .ifPresent(
+                iItemHandler -> {
+                    this.addSlot(new InfuseSlot(iItemHandler,0,36,33));
+                    this.addSlot(new UnFedSlot(iItemHandler,1, 124, 33));
+                    this.addSlot(new OutputSlot(iItemHandler,2, 80, 33));
+                }
+            );
+        // Add additional data slots if needed
         addDataSlots(data);
     }
 
@@ -44,21 +71,13 @@ public class InfusionTableMenu extends AbstractContainerMenu {
         return data.get(0) > 0;
     }
 
-    public int getScaledProgress() {
+    public int getScaledProgress(int progressBar) {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);  // Max Progress
-        int progressArrowSize = 26; // This is the height in pixels of your arrow
+        int progressArrowSize = progressBar; // This is the width in pixels loader
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
-
-    // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
-    // must assign a slot number to each of the slots used by the GUI.
-    // For this container, we can see both the tile inventory's slots as well as the player inventory slots and the hotbar.
-    // Each time we add a Slot to the container, it automatically increases the slotIndex, which means
-    //  0 - 8 = hotbar slots (which will map to the InventoryPlayer slot numbers 0 - 8)
-    //  9 - 35 = player inventory slots (which map to the InventoryPlayer slot numbers 9 - 35)
-    //  36 - 44 = TileInventory slots, which map to our TileEntity slot numbers 0 - 8)
     private static final int HOTBAR_SLOT_COUNT = 9;
     private static final int PLAYER_INVENTORY_ROW_COUNT = 3;
     private static final int PLAYER_INVENTORY_COLUMN_COUNT = 9;
@@ -68,7 +87,7 @@ public class InfusionTableMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 2;  // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 3;  // must be the number of slots you have!
     @Override
     public ItemStack quickMoveStack(Player playerIn, int pIndex) {
         Slot sourceSlot = slots.get(pIndex);
@@ -102,23 +121,13 @@ public class InfusionTableMenu extends AbstractContainerMenu {
         return copyOfSourceStack;
     }
 
+
     @Override
     public boolean stillValid(Player pPlayer) {
+        // Check if the container is still valid using the ContainerLevelAccess.create method
+        // This method requires the level (world) and the position of the block entity
+        // It also checks if the player is still interacting with the container
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 pPlayer, ModBlocks.CRYSTAL_INFUSION_TABLE.get());
-    }
-
-    private void addPlayerInventory(Inventory playerInventory) {
-        for (int i = 0; i < 3; ++i) {
-            for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 84 + i * 18));
-            }
-        }
-    }
-
-    private void addPlayerHotbar(Inventory playerInventory) {
-        for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
-        }
     }
 }

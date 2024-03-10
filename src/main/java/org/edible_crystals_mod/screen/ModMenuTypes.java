@@ -8,13 +8,13 @@ import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.edible_crystals_mod.untitled.EdibleCrystalMod;
+import org.edible_crystals_mod.EdibleCrystalMod;
 
 public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(ForgeRegistries.MENU_TYPES, EdibleCrystalMod.MOD_ID);
 
-    public static final RegistryObject<MenuType<InfusionTableMenu>> CRYSTAL_INFUSION_TABLE =
+    public static final RegistryObject<MenuType<InfusionTableMenu>> CRYSTAL_INFUSION_MENU =
             registerMenuType("crystal_infusion_menu", InfusionTableMenu::new);
 
 

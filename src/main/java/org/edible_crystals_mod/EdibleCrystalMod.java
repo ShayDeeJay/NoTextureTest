@@ -1,9 +1,8 @@
-package org.edible_crystals_mod.untitled;
+package org.edible_crystals_mod;
 
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -17,9 +16,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.edible_crystals_mod.block.ModBlocks;
 import org.edible_crystals_mod.block.entity.ModBlockEntities;
+import org.edible_crystals_mod.items.CrystalItems;
 import org.edible_crystals_mod.loot.ModLootModifiers;
 import org.edible_crystals_mod.screen.InfusionTableScreen;
 import org.edible_crystals_mod.screen.ModMenuTypes;
+import org.edible_crystals_mod.untitled.ModCreativeModTabs;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -34,6 +35,7 @@ public class EdibleCrystalMod {
 
     public EdibleCrystalMod() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         //Here is where re register the item and pass the i eventBuss above which will register the Mod
         ModCreativeModTabs.register(modEventBus);
 
@@ -59,7 +61,7 @@ public class EdibleCrystalMod {
         /*CrystalItems.setup(event);*/
     }
 
-    // Add the example block item to the building blocks tab
+    // Add the example blockstates item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
         if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
             event.accept(CrystalItems.EDIBLE_CRYSTAL_FRAGMENT);
@@ -85,7 +87,7 @@ public class EdibleCrystalMod {
 
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            MenuScreens.register(ModMenuTypes.CRYSTAL_INFUSION_TABLE.get(), InfusionTableScreen::new);
+            MenuScreens.register(ModMenuTypes.CRYSTAL_INFUSION_MENU.get(), InfusionTableScreen::new);
         }
     }
 }

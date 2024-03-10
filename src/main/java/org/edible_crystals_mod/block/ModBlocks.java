@@ -4,15 +4,14 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import org.edible_crystals_mod.block.customBlock.CrystalInfusingTable;
-import org.edible_crystals_mod.untitled.CrystalItems;
-import org.edible_crystals_mod.untitled.EdibleCrystalMod;
+import org.edible_crystals_mod.EdibleCrystalMod;
+import org.edible_crystals_mod.block.custom.CrystalInfusingTableBlock;
+import org.edible_crystals_mod.items.CrystalItems;
 
 import java.util.function.Supplier;
 
@@ -23,7 +22,11 @@ public class ModBlocks {
 
 
     public static RegistryObject<Block> CRYSTAL_INFUSION_TABLE = registerBlock("infusion_table",
-            () -> new CrystalInfusingTable(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).sound(SoundType.AMETHYST).noOcclusion())
+            () -> new CrystalInfusingTableBlock(
+                    BlockBehaviour
+                    .Properties.copy(Blocks.CRAFTING_TABLE)
+                    .noOcclusion()
+            )
     );
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
