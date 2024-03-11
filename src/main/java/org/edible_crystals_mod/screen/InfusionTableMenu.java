@@ -1,5 +1,6 @@
 package org.edible_crystals_mod.screen;
 
+import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -55,14 +56,20 @@ public class InfusionTableMenu extends AbstractContainerMenu {
 
         // Retrieve the IItemHandler capability from the blockEntity
         this.blockEntity
-            .getCapability(ForgeCapabilities.ITEM_HANDLER)
+            .getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.NORTH)
             .ifPresent(
                 iItemHandler -> {
                     this.addSlot(new InfuseSlot(iItemHandler,0,36,33));
                     this.addSlot(new UnFedSlot(iItemHandler,1, 124, 33));
-                    this.addSlot(new OutputSlot(iItemHandler,2, 80, 33));
                 }
             );
+        this.blockEntity
+                .getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.DOWN)
+                .ifPresent(
+                        iItemHandler -> {
+                            this.addSlot(new OutputSlot(iItemHandler,0, 80, 33));
+                        }
+                );
         // Add additional data slots if needed
         addDataSlots(data);
     }

@@ -4,6 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -33,11 +36,25 @@ import org.jetbrains.annotations.Nullable;
 
 public class CrystalInfusionTableEntity extends BlockEntity implements MenuProvider {
 
-    private final ItemStackHandler itemHandler = new ItemStackHandler(3);
+    private final ItemStackHandler itemHandler = new ItemStackHandler(2);
+    private final ItemStackHandler itemHandlerOutput = new ItemStackHandler(1) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+            if(!level.isClientSide) {
+                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
+            }
+        }
+    };
     private static final int INFUSE_SLOT = 0;
     private static final int UNFED_SLOT = 1;
-    private static final int INFUSED_OUTPUT_SLOT = 2;
+    private static final int INFUSED_OUTPUT_SLOT = 0;
+//    private static final int INFUSED_OUTPUT_SLOT = EM
+
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+
+    private LazyOptional<IItemHandler> lazyItemHandlerOutput = LazyOptional.empty();
+
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 200;
@@ -73,16 +90,32 @@ public class CrystalInfusionTableEntity extends BlockEntity implements MenuProvi
 
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return lazyItemHandler.cast();
+            if(side == Direction.DOWN) {
+                return lazyItemHandlerOutput.cast();
+            }
+            if(side == Direction.NORTH) {
+                return lazyItemHandler.cast();
+            }
         }
 
         return super.getCapability(cap, side);
     }
 
+
+    public ItemStack getRenderer() {
+        if(itemHandlerOutput.getStackInSlot(INFUSED_OUTPUT_SLOT).isEmpty()) {
+            return itemHandler.getStackInSlot(INFUSE_SLOT);
+        } else {
+            return itemHandlerOutput.getStackInSlot(INFUSED_OUTPUT_SLOT);
+        }
+    }
+
+
     @Override
     public void onLoad() {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
+        lazyItemHandlerOutput = LazyOptional.of(() -> itemHandlerOutput);
     }
 
     public ContainerData getData() {
@@ -93,6 +126,7 @@ public class CrystalInfusionTableEntity extends BlockEntity implements MenuProvi
     public void invalidateCaps() {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
+        lazyItemHandlerOutput.invalidate();
     }
 
     public void drops() {
@@ -198,10 +232,11 @@ public class CrystalInfusionTableEntity extends BlockEntity implements MenuProvi
         this.itemHandler.extractItem(UNFED_SLOT, 1, false);
 
         // Get the current count of items in the output slot and add the count of the new result
-        int newCount = this.itemHandler.getStackInSlot(INFUSED_OUTPUT_SLOT).getCount() + result.getCount();
+//        int newCount = this.itemHandlerOutput.getStackInSlot(INFUSED_OUTPUT_SLOT).getCount() + result.getCount();
 
         // Set the new ItemStack with the updated count in the output slot
-        this.itemHandler.setStackInSlot(INFUSED_OUTPUT_SLOT, new ItemStack(result.getItem(), newCount));
+        this.itemHandlerOutput.setStackInSlot(INFUSED_OUTPUT_SLOT, new ItemStack(result.getItem(),
+                this.itemHandlerOutput.getStackInSlot(INFUSED_OUTPUT_SLOT).getCount() + result.getCount()));
     }
 
     private boolean hasRecipe() {
@@ -215,16 +250,16 @@ public class CrystalInfusionTableEntity extends BlockEntity implements MenuProvi
     // Method to check if the provided item can be inserted into the output slot
     private boolean canInsertItemIntoOutputSlot(Item item) {
         // Check if the output slot is empty or if it contains the same item as the one being inserted
-        return this.itemHandler.getStackInSlot(INFUSED_OUTPUT_SLOT).isEmpty() ||
-                this.itemHandler.getStackInSlot(INFUSED_OUTPUT_SLOT).is(item);
+        return this.itemHandlerOutput.getStackInSlot(INFUSED_OUTPUT_SLOT).isEmpty() ||
+                this.itemHandlerOutput.getStackInSlot(INFUSED_OUTPUT_SLOT).is(item);
     }
 
     // Method to check if the specified number of items can be inserted into the output slot
     private boolean canInsertAmountIntoOutputSlot(int count) {
         // Get the current count of items in the output slot
-        int currentCount = this.itemHandler.getStackInSlot(INFUSED_OUTPUT_SLOT).getCount();
+        int currentCount = this.itemHandlerOutput.getStackInSlot(INFUSED_OUTPUT_SLOT).getCount();
         // Get the maximum stack size allowed for items in the output slot
-        int maxStackSize = this.itemHandler.getStackInSlot(INFUSED_OUTPUT_SLOT).getMaxStackSize();
+        int maxStackSize = this.itemHandlerOutput.getStackInSlot(INFUSED_OUTPUT_SLOT).getMaxStackSize();
 
         // Check if inserting the specified number of items would exceed the maximum stack size
         return currentCount + count <= maxStackSize;
@@ -236,6 +271,17 @@ public class CrystalInfusionTableEntity extends BlockEntity implements MenuProvi
 
     private void increaseCraftingProgress() {
         progress++;
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
     }
 }
 

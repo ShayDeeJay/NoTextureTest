@@ -2,11 +2,7 @@ package org.edible_crystals_mod.block.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -44,21 +40,21 @@ public class CrystalInfusingTableBlock extends BaseEntityBlock {
         );
     }
 
-    @Override
-    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
-
-        double d0 = (double) pPos.getX() + 0.4D + (double) pRandom.nextFloat() * 0.2D;
-        double d1 = (double) pPos.getY() + 0.7D + (double) pRandom.nextFloat() * 0.3D;
-        double d2 = (double) pPos.getZ() + 0.4D + (double) pRandom.nextFloat() * 0.2D;
-
-        if (pState.getValue(IS_INFUSING)) {
-            pLevel.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_LAVA, d0, d1+ 0.8, d2, 0.0D, 0.5D, 0.0D);
-            pLevel.playLocalSound(d0, d1, d2, SoundEvents.BLAZE_BURN, SoundSource.BLOCKS, 0.05F, 100.0F, true);
-        } else {
-            pLevel.addParticle(ParticleTypes.DRAGON_BREATH, d0, d1 + 0.5, d2, 0.0D, 0.01D, 0.01D);
-            pLevel.addParticle(ParticleTypes.DRAGON_BREATH, d0, d1 + 0.5, d2, 0.0D, 0.01D, -0.01D);
-        }
-    }
+//    @Override
+//    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
+//
+//        double d0 = (double) pPos.getX() + 0.4D + (double) pRandom.nextFloat() * 0.2D;
+//        double d1 = (double) pPos.getY() + 0.7D + (double) pRandom.nextFloat() * 0.3D;
+//        double d2 = (double) pPos.getZ() + 0.4D + (double) pRandom.nextFloat() * 0.2D;
+//
+//        if (pState.getValue(IS_INFUSING)) {
+//            pLevel.addParticle(ParticleTypes.DRIPPING_DRIPSTONE_LAVA, d0, d1+ 0.8, d2, 0.0D, 0.5D, 0.0D);
+//            pLevel.playLocalSound(d0, d1, d2, SoundEvents.BLAZE_BURN, SoundSource.BLOCKS, 0.05F, 100.0F, true);
+//        } else {
+//            pLevel.addParticle(ParticleTypes.DRAGON_BREATH, d0, d1 + 0.5, d2, 0.0D, 0.01D, 0.01D);
+//            pLevel.addParticle(ParticleTypes.DRAGON_BREATH, d0, d1 + 0.5, d2, 0.0D, 0.01D, -0.01D);
+//        }
+//    }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(FACING);

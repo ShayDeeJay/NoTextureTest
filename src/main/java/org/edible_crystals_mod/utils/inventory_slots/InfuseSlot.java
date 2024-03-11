@@ -14,4 +14,12 @@ public class InfuseSlot extends SlotItemHandler {
     public boolean mayPlace(@NotNull ItemStack stack) {
         return stack.is(ModTags.Items.INFUSE);
     }
+
+    @Override
+    public ItemStack safeInsert(ItemStack pStack) {
+        if(pStack.is(ModTags.Items.INFUSE)) {
+            return pStack;
+        }
+        return ItemStack.EMPTY;
+    }
 }
