@@ -3,7 +3,6 @@ package org.edible_crystals_mod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -14,13 +13,17 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.edible_crystals_mod.block.ModBlocks;
-import org.edible_crystals_mod.block.entity.ModBlockEntities;
-import org.edible_crystals_mod.items.CrystalItems;
+import org.edible_crystals_mod.registers.ModEffectsRegister;
+import org.edible_crystals_mod.abilities_and_effects.effects.EffectMaps;
+import org.edible_crystals_mod.block.crystalinfusiontable.InfusionTableScreen;
+import org.edible_crystals_mod.entity.ModEntities;
 import org.edible_crystals_mod.loot.ModLootModifiers;
-import org.edible_crystals_mod.screen.InfusionTableScreen;
-import org.edible_crystals_mod.screen.ModMenuTypes;
-import org.edible_crystals_mod.untitled.ModCreativeModTabs;
+import org.edible_crystals_mod.registers.BlockEntitiesRegister;
+import org.edible_crystals_mod.registers.BlocksRegister;
+import org.edible_crystals_mod.registers.ItemsRegister;
+import org.edible_crystals_mod.registers.ModMenusRegister;
+import org.edible_crystals_mod.sounds.ModSounds;
+import org.edible_crystals_mod.utils.ModCreativeModTabs;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -39,13 +42,17 @@ public class EdibleCrystalMod {
         //Here is where re register the item and pass the i eventBuss above which will register the Mod
         ModCreativeModTabs.register(modEventBus);
 
-        CrystalItems.register(modEventBus);
-        ModBlocks.register(modEventBus);
-
+        ItemsRegister.register(modEventBus);
+        BlocksRegister.register(modEventBus);
+        EffectMaps.register(modEventBus);
         ModLootModifiers.register(modEventBus);
 
-        ModBlockEntities.register(modEventBus);
-        ModMenuTypes.register(modEventBus);
+        BlockEntitiesRegister.register(modEventBus);
+        ModMenusRegister.register(modEventBus);
+        ModEntities.register(modEventBus);
+        ModEffectsRegister.register(modEventBus);
+
+        ModSounds.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -63,17 +70,9 @@ public class EdibleCrystalMod {
 
     // Add the example blockstates item to the building blocks tab
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-            event.accept(CrystalItems.EDIBLE_CRYSTAL_FRAGMENT);
-            event.accept(CrystalItems.EDIBLE_CRYSTAL);
-        }
-
-        if(event.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
-            event.accept(CrystalItems.EDIBLE_CRYSTAL_BEET);
-            event.accept(CrystalItems.EDIBLE_CRYSTAL_CARROT);
-            event.accept(CrystalItems.EDIBLE_CRYSTAL_GOLDEN_APPLE);
-            event.accept(CrystalItems.EDIBLE_CRYSTAL_GOLDEN_APPLE_JUICED);
-        }
+//        if(event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+//            event.accept(ItemsRegister.EDIBLE_CRYSTAL_FRAGMENT);
+//        }
     }
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
@@ -87,7 +86,8 @@ public class EdibleCrystalMod {
 
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-            MenuScreens.register(ModMenuTypes.CRYSTAL_INFUSION_MENU.get(), InfusionTableScreen::new);
+            MenuScreens.register(ModMenusRegister.CRYSTAL_INFUSION_MENU.get(), InfusionTableScreen::new);
+
         }
     }
 }

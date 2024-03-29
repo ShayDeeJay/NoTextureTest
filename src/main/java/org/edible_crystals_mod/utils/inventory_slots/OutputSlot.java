@@ -11,6 +11,8 @@ public class OutputSlot extends SlotItemHandler {
         super(itemHandler, index, xPosition, yPosition);
     }
 
+
+
     @Override
     public boolean mayPlace(@NotNull ItemStack stack) {
         return false;

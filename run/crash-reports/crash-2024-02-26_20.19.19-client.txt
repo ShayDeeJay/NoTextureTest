@@ -5,7 +5,7 @@ Time: 2024-02-26 20:19:19
 Description: Unexpected error
 
 java.lang.ClassCastException: class net.minecraft.client.player.LocalPlayer cannot be cast to class net.minecraft.server.level.ServerPlayer (net.minecraft.client.player.LocalPlayer and net.minecraft.server.level.ServerPlayer are in module minecraft@1.20.1 of loader 'TRANSFORMER' @55fdf7f9)
-	at org.edible_crystals_mod.block.custom.CrystalInfusingTableBlock.use(CrystalInfusingTable.java:55) ~[main/:?] {re:classloading}
+	at org.edible_crystals_mod.block.crystalinfusiontable.CrystalInfusingTableBlock.use(CrystalInfusingTable.java:55) ~[main/:?] {re:classloading}
 	at net.minecraft.world.level.block.state.BlockBehaviour$BlockStateBase.use(BlockBehaviour.java:886) ~[forge-1.20.1-47.2.20_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:classloading}
 	at net.minecraft.client.multiplayer.MultiPlayerGameMode.performUseItemOn(MultiPlayerGameMode.java:341) ~[forge-1.20.1-47.2.20_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
 	at net.minecraft.client.multiplayer.MultiPlayerGameMode.lambda$useItemOn$4(MultiPlayerGameMode.java:309) ~[forge-1.20.1-47.2.20_mapped_parchment_2023.09.03-1.20.1-recomp.jar:?] {re:classloading,pl:runtimedistcleaner:A}
@@ -42,9 +42,9 @@ A detailed walkthrough of the error, its code path and all known details is as f
 Thread: Render thread
 Suspected Mod: 
 	Edible Crystals (ediblecrystals), Version: 1.0-SNAPSHOT
-		at TRANSFORMER/ediblecrystals@1.0-SNAPSHOT/org.edible_crystals_mod.block.custom.CrystalInfusingTableBlock.use(CrystalInfusingTable.java:55)
+		at TRANSFORMER/ediblecrystals@1.0-SNAPSHOT/org.edible_crystals_mod.block.crystalinfusiontable.CrystalInfusingTableBlock.use(CrystalInfusingTable.java:55)
 Stacktrace:
-	at org.edible_crystals_mod.block.custom.CrystalInfusingTableBlock.use(CrystalInfusingTable.java:55) ~[%23196!/:?] {re:classloading}
+	at org.edible_crystals_mod.block.crystalinfusiontable.CrystalInfusingTableBlock.use(CrystalInfusingTable.java:55) ~[%23196!/:?] {re:classloading}
 	at net.minecraft.world.level.block.state.BlockBehaviour$BlockStateBase.use(BlockBehaviour.java:886) ~[forge-1.20.1-47.2.20_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23191!/:?] {re:classloading}
 	at net.minecraft.client.multiplayer.MultiPlayerGameMode.performUseItemOn(MultiPlayerGameMode.java:341) ~[forge-1.20.1-47.2.20_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:runtimedistcleaner:A}
 	at net.minecraft.client.multiplayer.MultiPlayerGameMode.lambda$useItemOn$4(MultiPlayerGameMode.java:309) ~[forge-1.20.1-47.2.20_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:runtimedistcleaner:A}

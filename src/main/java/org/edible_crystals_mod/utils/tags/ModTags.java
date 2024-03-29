@@ -4,18 +4,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.edible_crystals_mod.EdibleCrystalMod;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class ModTags {
-//    public static class Blocks {
-//        public static final TagKey<Block> METAL_DETECTOR_VALUABLES = tag("metal_detector_valuables");
-//        public static final TagKey<Block> NEEDS_SAPPHIRE_TOOL = tag("needs_sapphire_tool");
-//
-//
-//        private static TagKey<Block> tag(String name) {
-//            return BlockTags.create(new ResourceLocation(TutorialMod.MOD_ID, name));
-//        }
-//    }
+
+    public static List<Integer> checkNBTIntArray(ItemStack itemStack, String key) {
+        assert itemStack.getTag() != null;
+        return Arrays.stream(itemStack.getTag().getIntArray(key)).boxed().toList();
+    }
 
     public static class Items {
         public static final TagKey<Item> INFUSE = tag("infuse");
@@ -23,6 +23,10 @@ public class ModTags {
         public static final TagKey<Item> INFUSE_FUEL = tag("infuse_fuel");
 
         public static final TagKey<Item> INFUSED_JUICER = tag("infuse_juicer");
+
+        public static final TagKey<Item> MOD_BOOK = tag("mod_book");
+
+        public static final TagKey<Item> INFUSE_EFFECT = tag("infuse");
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(EdibleCrystalMod.MOD_ID, name));
         }

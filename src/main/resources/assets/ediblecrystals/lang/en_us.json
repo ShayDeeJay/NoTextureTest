@@ -5,6 +5,10 @@
   "item.ediblecrystals.edible_crystal_beet": "Edible Beet Crystal",
   "item.ediblecrystals.edible_crystal_golden_apple": "Edible Golden Apple Crystal",
   "item.ediblecrystals.edible_crystal_golden_apple_juiced": "Edible Golden Apple Crystal (Juiced)",
+  "item.ediblecrystals.tablet_of_rex": "Tablet Of Rex",
   "block.ediblecrystals.infusion_table": "Infusion Table",
-  "creativetab.edible_crystals_tab": "Edible Crystals"
+  "creativetab.edible_crystals_tab": "Edible Crystals",
+  "block.ediblecrystals.fragmentor": "Fragmentor",
+  "effect.ediblecrystals.step_boost": "Step Assist",
+  "effect.ediblecrystals.amplify_reach": "Block Reach"
 }

@@ -9,38 +9,37 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import org.edible_crystals_mod.EdibleCrystalMod;
-import org.edible_crystals_mod.items.CrystalItems;
+import org.edible_crystals_mod.abilities_and_effects.effects.EffectMaps;
+import org.edible_crystals_mod.registers.ItemsRegister;
 
 import java.util.List;
 import java.util.function.Consumer;
 
 public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
-//    private static final List<ItemLike> SAPPHIRE_SMELTABLES = List.of(ModItems.RAW_SAPPHIRE.get(),
-//            ModBlocks.SAPPHIRE_ORE.get(), ModBlocks.DEEPSLATE_SAPPHIRE_ORE.get(), ModBlocks.NETHER_SAPPHIRE_ORE.get(),
-//            ModBlocks.END_STONE_SAPPHIRE_ORE.get());
-
     public ModRecipeProvider(PackOutput pOutput) {
         super(pOutput);
     }
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
-//        oreSmelting(pWriter, SAPPHIRE_SMELTABLES, RecipeCategory.MISC, ModItems.SAPPHIRE.get(), 0.25f, 200, "sapphire");
-//        oreBlasting(pWriter, SAPPHIRE_SMELTABLES, RecipeCategory.MISC, ModItems.SAPPHIRE.get(), 0.25f, 100, "sapphire");
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, CrystalItems.EDIBLE_CRYSTAL.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, EffectMaps.EDIBLE_CRYSTAL.get())
                 .pattern(" S ")
-                .pattern("SDS")
+                .pattern("SNS")
                 .pattern(" S ")
-                .define('S', CrystalItems.EDIBLE_CRYSTAL_FRAGMENT.get())
-                .define('D', Items.DIAMOND)
-                .unlockedBy(getHasName(CrystalItems.EDIBLE_CRYSTAL_FRAGMENT.get()), has(CrystalItems.EDIBLE_CRYSTAL_FRAGMENT.get()))
+                .define('S', EffectMaps.EDIBLE_CRYSTAL_FRAGMENT.get())
+                .define('N', Items.IRON_NUGGET)
+                .unlockedBy(getHasName(EffectMaps.EDIBLE_CRYSTAL_FRAGMENT.get()), has(EffectMaps.EDIBLE_CRYSTAL_FRAGMENT.get()))
                 .save(pWriter);
 
-//        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ModItems.SAPPHIRE.get(), 9)
-//                .requires(ModBlocks.SAPPHIRE_BLOCK.get())
-//                .unlockedBy(getHasName(ModBlocks.SAPPHIRE_BLOCK.get()), has(ModBlocks.SAPPHIRE_BLOCK.get()))
-//                .save(pWriter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ItemsRegister.TABLET_OF_REX.get())
+            .pattern(" S ")
+            .pattern("SNS")
+            .pattern(" S ")
+            .define('S', Items.BRICK)
+            .define('N', Items.IRON_NUGGET)
+            .unlockedBy(getHasName(EffectMaps.EDIBLE_CRYSTAL_FRAGMENT.get()), has(EffectMaps.EDIBLE_CRYSTAL_FRAGMENT.get()))
+            .save(pWriter);
     }
 
     protected static void oreSmelting(Consumer<FinishedRecipe> pFinishedRecipeConsumer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTIme, String pGroup) {
@@ -51,12 +50,16 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         oreCooking(pFinishedRecipeConsumer, RecipeSerializer.BLASTING_RECIPE, pIngredients, pCategory, pResult, pExperience, pCookingTime, pGroup, "_from_blasting");
     }
 
-    protected static void oreCooking(Consumer<FinishedRecipe> pFinishedRecipeConsumer, RecipeSerializer<? extends AbstractCookingRecipe> pCookingSerializer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTime, String pGroup, String pRecipeName) {
+    protected static void oreCooking(
+        Consumer<FinishedRecipe> pFinishedRecipeConsumer, RecipeSerializer<? extends AbstractCookingRecipe> pCookingSerializer, List<ItemLike> pIngredients, RecipeCategory pCategory, ItemLike pResult, float pExperience, int pCookingTime, String pGroup, String pRecipeName) {
         for(ItemLike itemlike : pIngredients) {
             SimpleCookingRecipeBuilder.generic(Ingredient.of(itemlike), pCategory, pResult,
                     pExperience, pCookingTime, pCookingSerializer)
                     .group(pGroup).unlockedBy(getHasName(itemlike), has(itemlike))
                     .save(pFinishedRecipeConsumer,  EdibleCrystalMod.MOD_ID + ":" + getItemName(pResult) + pRecipeName + "_" + getItemName(itemlike));
+
         }
     }
+
+
 }

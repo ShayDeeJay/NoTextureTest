@@ -1,0 +1,17 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"idle": {
+			"loop": false,
+			"bones": {
+				"bone": {
+					"position": {
+						"vector": [0, "math.sin(query.anim_time * 70) * 2", 0]
+					}
+				}
+			},
+			"sound_effects": {},
+			"particle_effects": {}
+		}
+	}
+}
