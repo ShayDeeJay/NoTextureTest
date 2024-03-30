@@ -25,6 +25,7 @@ import org.edible_crystals_mod.registers.ModMenusRegister;
 import org.edible_crystals_mod.sounds.ModSounds;
 import org.edible_crystals_mod.utils.ModCreativeModTabs;
 import org.slf4j.Logger;
+import particle.ModParticles;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(EdibleCrystalMod.MOD_ID)
@@ -52,6 +53,7 @@ public class EdibleCrystalMod {
         ModEntities.register(modEventBus);
         ModEffectsRegister.register(modEventBus);
 
+        ModParticles.register(modEventBus);
         ModSounds.register(modEventBus);
 
         // Register the commonSetup method for modloading

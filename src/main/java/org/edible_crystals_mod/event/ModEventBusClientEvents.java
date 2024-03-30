@@ -4,6 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -16,6 +17,8 @@ import org.edible_crystals_mod.registers.BlockEntitiesRegister;
 import org.edible_crystals_mod.renderers.blocks.CrystalInfusionTableRenderer;
 import org.edible_crystals_mod.renderers.blocks.FragmentorRenderer;
 import org.edible_crystals_mod.renderers.blocks.InfusionRenderer;
+import particle.ModParticles;
+import particle.custom.ProjectileParticles;
 
 
 @Mod.EventBusSubscriber(modid = EdibleCrystalMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -32,8 +35,16 @@ public class ModEventBusClientEvents {
     @SubscribeEvent
     public void register (RegisterEvent event) {
         event.register(ForgeRegistries.Keys.ITEMS,
-                helper -> helper.register(new ResourceLocation(EdibleCrystalMod.MOD_ID, "tablet_of_rex"), new TabletItem(new Item.Properties()))
+            helper -> helper.register(new ResourceLocation(EdibleCrystalMod.MOD_ID, "tablet_of_rex"), new TabletItem(new Item.Properties()))
         );
+    }
+
+    @SubscribeEvent
+    public void registerParticleFactories(final RegisterParticleProvidersEvent event) {
+
+        event.registerSpriteSet(ModParticles.PROJECTILE_PARTICLES.get(), ProjectileParticles.Provider::new);
+
+//        Minecraft.getInstance().particleEngine.register(ModParticles.PROJECTILE_PARTICLES.get(), ProjectileParticles.Provider::new);
     }
 
 }

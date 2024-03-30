@@ -37,6 +37,8 @@ public class TabletItem extends Item implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final String key = "edible_mod_effects";
 
+    private static boolean modeSelect;
+
     public TabletItem(Properties pProperties) {
         super(pProperties);
     }
@@ -46,6 +48,7 @@ public class TabletItem extends Item implements GeoItem {
 
     @Override
     public int getMaxStackSize(ItemStack stack) { return 1; }
+
 
 
     @Override
@@ -71,7 +74,6 @@ public class TabletItem extends Item implements GeoItem {
         if(pEntity instanceof Player player ){
             boolean hasKey = pStack.getTag() != null && pStack.getTag().contains(key);
             if (player.getOffhandItem() == pStack) {
-                LaunchMovement.tickEvent(player, this, 10);
 
                 if (hasKey) {
                     Arrays.stream(pStack.getTag().getIntArray(key)).boxed().forEach(
@@ -87,6 +89,7 @@ public class TabletItem extends Item implements GeoItem {
                     );
                 }
             }
+            LaunchMovement.tickEvent(player, this, 4);
         }
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
     }
@@ -94,8 +97,26 @@ public class TabletItem extends Item implements GeoItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
         ItemStack itemsInHand = player.getItemInHand(pUsedHand);
-//        LaunchMovement.launchPlayerDirection(player, pLevel,2.0f);
-        BlockBreakingProjectile.fireProjectile(player, pLevel);
+
+        if (player.isShiftKeyDown()) {
+            if(!pLevel.isClientSide){
+                modeSelect = !modeSelect;
+                if (modeSelect) {
+                    player.sendSystemMessage(Component.literal("Movement"));
+                } else {
+                    player.sendSystemMessage(Component.literal("Block"));
+                }
+            }
+        } else {
+            if (modeSelect) {
+                LaunchMovement.launchPlayerDirection(player, pLevel, 2.0f);
+            } else {
+                BlockBreakingProjectile.fireProjectile(player, pLevel);
+            }
+        }
+
+
+
         return InteractionResultHolder.pass(itemsInHand);
     }
 

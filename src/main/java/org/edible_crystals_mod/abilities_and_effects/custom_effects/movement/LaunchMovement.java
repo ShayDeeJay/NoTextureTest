@@ -36,12 +36,12 @@ public class LaunchMovement {
         }
 
         if(triggerFallDeath && !player.isFallFlying()) {
-            player.setDeltaMovement(playerMovement.x, playerMovement.y + 0.020f, playerMovement.z);
+            player.setDeltaMovement(playerMovement.x, playerMovement.y + 0.04f, playerMovement.z);
             player.resetFallDistance();
         }
 
-        if(player.verticalCollisionBelow && triggerFallDeath){
-            player.setDeltaMovement(playerMovement.x, playerMovement.y + 0.7f, playerMovement.z);
+        if(player.verticalCollisionBelow && triggerFallDeath || player.isInWater()){
+            player.setDeltaMovement(playerMovement.x, playerMovement.y + 0.5f, playerMovement.z);
             maxLaunch = 0;
             triggerFallDeath = false;
         }

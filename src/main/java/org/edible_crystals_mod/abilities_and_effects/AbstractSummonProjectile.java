@@ -170,7 +170,6 @@ public abstract class AbstractSummonProjectile extends Projectile {
             this.yPower = d1 / d3 * 0.1D;
             this.zPower = d2 / d3 * 0.1D;
         }
-
     }
 
 }
