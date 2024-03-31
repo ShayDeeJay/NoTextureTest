@@ -32,12 +32,11 @@ public class BlocksRegister {
             )
     );
 
-    public static RegistryObject<Block> FRAGMENTOR = registerBlock("fragmentor",
+    public static RegistryObject<Block> TANK = registerBlock("tank",
             () -> new FragmentorBlock(
                 BlockBehaviour
-                    .Properties.copy(Blocks.CRAFTING_TABLE)
+                    .Properties.copy(Blocks.IRON_BLOCK)
                     .noOcclusion()
-
             )
     );
 
@@ -53,8 +52,18 @@ public class BlocksRegister {
         () -> new DropExperienceBlock(
             BlockBehaviour.Properties.copy(Blocks.STONE)
                 .strength(2f)
+                .lightLevel((p_187431_) -> 1)
                 .requiresCorrectToolForDrops(),
             UniformInt.of(3, 6)
+        )
+    );
+
+    public static RegistryObject<Block> LIGHTING = registerBlock("lighting",
+        () -> new Block(
+            BlockBehaviour.Properties.copy(Blocks.TORCH)
+                .lightLevel((p_187431_) -> 15)
+                .noCollission()
+                .instabreak()
         )
     );
 

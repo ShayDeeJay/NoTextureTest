@@ -1,10 +1,10 @@
 package org.edible_crystals_mod.abilities_and_effects.custom_effects.movement;
 
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.edible_crystals_mod.sounds.ModSounds;
 
 public class LaunchMovement {
     private static boolean triggerFallDeath;
@@ -17,7 +17,7 @@ public class LaunchMovement {
     ) {
         boolean maxLaunchTime = maxLaunch < 3;
         if (!player.verticalCollision && maxLaunchTime || player.isInWater()) {
-            player.playSound(SoundEvents.PARROT_FLY, 1,0.5f);
+            player.playSound(ModSounds.DASH_EFFECT.get(), 0.4f,1.0f);
             player.setDeltaMovement(new Vec3(player.getLookAngle().toVector3f().mul(scalar)));
 
             if(level.isClientSide){
@@ -28,10 +28,11 @@ public class LaunchMovement {
 
     }
 
-    public static void tickEvent(Player player, Item tablet, int cooldown) {
+    public static void tickEvent(Player player, Item tablet, Level level, int cooldown) {
         Vec3 playerMovement = player.getDeltaMovement();
+        int maxLaunchNumber = 2;
 
-        if(maxLaunch == 3){
+        if(maxLaunch == maxLaunchNumber){
             player.getCooldowns().addCooldown(tablet, cooldown);
         }
 
@@ -40,8 +41,13 @@ public class LaunchMovement {
             player.resetFallDistance();
         }
 
-        if(player.verticalCollisionBelow && triggerFallDeath || player.isInWater()){
+        if(player.verticalCollisionBelow && triggerFallDeath){
             player.setDeltaMovement(playerMovement.x, playerMovement.y + 0.5f, playerMovement.z);
+            maxLaunch = 0;
+            triggerFallDeath = false;
+        }
+
+        if(player.isInWater()) {
             maxLaunch = 0;
             triggerFallDeath = false;
         }

@@ -1,0 +1,8 @@
+{
+  "dash_effect": {
+    "subtitles": "sounds.ediblecrystals.dash_effect",
+    "sounds": [
+      "ediblecrystals:dash_effect"
+    ]
+  }
+}

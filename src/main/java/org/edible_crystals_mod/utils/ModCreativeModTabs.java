@@ -39,8 +39,9 @@ public class ModCreativeModTabs {
                         pOutput.accept(ItemsRegister.MOD_BOOK.get());
                         pOutput.accept(ItemsRegister.TABLET_OF_REX.get());
                         pOutput.accept(BlocksRegister.CRYSTAL_INFUSION_TABLE.get());
-                        pOutput.accept(BlocksRegister.FRAGMENTOR.get());
+                        pOutput.accept(BlocksRegister.TANK.get());
                         pOutput.accept(BlocksRegister.INFUSER.get());
+                        pOutput.accept(BlocksRegister.LIGHTING.get());
                    })
                     .build()
     );

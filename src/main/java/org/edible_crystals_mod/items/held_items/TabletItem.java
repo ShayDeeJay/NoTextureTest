@@ -89,7 +89,7 @@ public class TabletItem extends Item implements GeoItem {
                     );
                 }
             }
-            LaunchMovement.tickEvent(player, this, 4);
+            LaunchMovement.tickEvent(player, this, pLevel,4);
         }
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
     }
@@ -97,6 +97,22 @@ public class TabletItem extends Item implements GeoItem {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
         ItemStack itemsInHand = player.getItemInHand(pUsedHand);
+        double x = player.getX();
+        double y = player.getY();
+        double z = player.getZ();
+        float rotX = player.xRotO;
+        float rotY = player.yRotO;
+
+        double distance = 1.5; // adjust as needed
+
+        // Calculate the horizontal and vertical offsets based on player's rotation
+        double horizontalOffset = -Math.sin(Math.toRadians(player.yRotO)) * Math.cos(Math.toRadians(player.xRotO)) * distance;
+        double verticalOffset = Math.sin(-Math.toRadians(player.xRotO)) * distance; // Adjusted for the offset when looking up
+
+        // Calculate the spawn position based on player's rotation
+        double spawnX = player.getX() + horizontalOffset;
+        double spawnY = player.getY() + player.getEyeHeight() + verticalOffset - 0.2; // Adjusted for eye height
+        double spawnZ = player.getZ() + Math.cos(Math.toRadians(player.yRotO)) * Math.cos(Math.toRadians(player.xRotO)) * distance;
 
         if (player.isShiftKeyDown()) {
             if(!pLevel.isClientSide){

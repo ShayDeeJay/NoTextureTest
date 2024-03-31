@@ -25,7 +25,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     protected void generate() {
 
         this.dropSelf(BlocksRegister.CRYSTAL_INFUSION_TABLE.get());
-        this.dropSelf(BlocksRegister.FRAGMENTOR.get());
+        this.dropSelf(BlocksRegister.TANK.get());
         this.dropSelf(BlocksRegister.INFUSER.get());
 
         this.add(BlocksRegister.CRYSTAL_ORE.get(),

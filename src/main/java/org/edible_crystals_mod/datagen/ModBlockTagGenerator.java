@@ -25,12 +25,14 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
             .add(BlocksRegister.CRYSTAL_INFUSION_TABLE.get());
 
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .add(BlocksRegister.FRAGMENTOR.get())
+            .add(BlocksRegister.TANK.get())
             .add(BlocksRegister.INFUSER.get())
             .add(BlocksRegister.CRYSTAL_ORE.get());;
 
         this.tag(ModTags.Block.CAN_REPLACE_BLOCK)
             .add(Blocks.AIR)
-            .add(Blocks.GRASS);
+            .add(Blocks.GRASS)
+            .add(Blocks.TALL_GRASS)
+            .addTag(BlockTags.FLOWERS);
     }
 }

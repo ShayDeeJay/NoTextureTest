@@ -19,10 +19,12 @@ public class ModBlockStateProvider extends BlockStateProvider {
         blockWithItem(BlocksRegister.CRYSTAL_ORE);
         simpleBlockWithItem(BlocksRegister.CRYSTAL_INFUSION_TABLE.get(),
             new ModelFile.UncheckedModelFile(modLoc("block/infusion_table")));
-        simpleBlockWithItem(BlocksRegister.FRAGMENTOR.get(),
-                new ModelFile.UncheckedModelFile(modLoc("block/fragmentor")));
+        simpleBlockWithItem(BlocksRegister.TANK.get(),
+            new ModelFile.UncheckedModelFile(modLoc("block/tank")));
         simpleBlockWithItem(BlocksRegister.INFUSER.get(),
-                new ModelFile.UncheckedModelFile(modLoc("block/infuser")));
+            new ModelFile.UncheckedModelFile(modLoc("block/infuser")));
+        simpleBlockWithItem(BlocksRegister.LIGHTING.get(),
+            new ModelFile.UncheckedModelFile(modLoc("block/lighting")));
     }
 
     private void blockWithItem(RegistryObject<Block> blockRegistryObject) {

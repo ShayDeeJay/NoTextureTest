@@ -28,7 +28,7 @@ public class BlockEntitiesRegister {
                     "fragmentor_be",
                     () -> BlockEntityType.Builder.of(
                             FragmentorBlockEntity::new,
-                            BlocksRegister.FRAGMENTOR.get()
+                            BlocksRegister.TANK.get()
                     ).build(null)
             );
 

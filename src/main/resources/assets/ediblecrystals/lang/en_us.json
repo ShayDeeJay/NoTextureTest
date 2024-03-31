@@ -10,5 +10,6 @@
   "creativetab.edible_crystals_tab": "Edible Crystals",
   "block.ediblecrystals.fragmentor": "Fragmentor",
   "effect.ediblecrystals.step_boost": "Step Assist",
-  "effect.ediblecrystals.amplify_reach": "Block Reach"
+  "effect.ediblecrystals.amplify_reach": "Block Reach",
+  "sounds.ediblecrystals.dash_effect": "Woosh"
 }
