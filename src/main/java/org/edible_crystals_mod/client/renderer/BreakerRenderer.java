@@ -24,8 +24,8 @@ public class BreakerRenderer extends GeoEntityRenderer<CustomProjectileCrystal> 
     @Override
     public void actuallyRender(PoseStack poseStack, CustomProjectileCrystal animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
 
-        poseStack.translate(0.0f, -0.25f, 0.0f);
-        poseStack.scale(1.5F, 1.5F, 1.5F);
+        poseStack.translate(0.0f, -0.28f, 0.0f);
+        poseStack.scale(1.3F, 1.3F, 1.3F);
 
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
     }

@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -57,6 +58,24 @@ public class CustomProjectileCrystal extends AbstractSummonProjectile implements
         super(pEntityType, pLevel);
 
     }
+
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+    private double lerpYRot;
+    private double lerpXRot;
+
+    @Override
+    public void lerpTo(double pX, double pY, double pZ, float pYRot, float pXRot, int pLerpSteps, boolean pTeleport) {
+        this.lerpX = pX;
+        this.lerpY = pY;
+        this.lerpZ = pZ;
+        this.lerpYRot = (double)pYRot;
+        this.lerpXRot = (double)pXRot;
+        this.lerpSteps = 5;
+    }
+
     protected void onHitEntity(EntityHitResult pResult) {
         super.onHitEntity(pResult);
         if (!this.level().isClientSide) {
@@ -105,8 +124,20 @@ public class CustomProjectileCrystal extends AbstractSummonProjectile implements
         double positionZ = this.getZ() - vec31.z;
 
         if (this.level().isClientSide) {
-            this.level().addParticle(ParticleTypes.SPORE_BLOSSOM_AIR, positionX, positionY, positionZ, 0.0D, 0.0D, 0.0D);
+            this.level().addParticle(ParticleTypes.SPORE_BLOSSOM_AIR, positionX, positionY -0.5f, positionZ, 0.0D, 0.0D, 0.0D);
             this.level().addParticle(ModParticles.PROJECTILE_PARTICLES.get(), positionX, positionY, positionZ, 0.0D, 0.0D, 0.0D);
+        }
+
+        if (this.lerpSteps > 0) {
+            double d = this.getX() + (this.lerpX - this.getX()) / (double)this.lerpSteps;
+            double e = this.getY() + (this.lerpY - this.getY()) / (double)this.lerpSteps;
+            double f = this.getZ() + (this.lerpZ - this.getZ()) / (double)this.lerpSteps;
+            double g = Mth.wrapDegrees(this.lerpYRot - (double)this.getYRot());
+            this.setYRot(this.getYRot() + (float)g / (float)this.lerpSteps);
+            this.setXRot(this.getXRot() + (float)(this.lerpXRot - (double)this.getXRot()) / (float)this.lerpSteps);
+            --this.lerpSteps;
+            this.setPos(d, e, f);
+            this.setRot(this.getYRot(), this.getXRot());
         }
     }
 

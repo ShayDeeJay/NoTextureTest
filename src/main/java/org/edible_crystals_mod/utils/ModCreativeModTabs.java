@@ -41,7 +41,6 @@ public class ModCreativeModTabs {
                         pOutput.accept(BlocksRegister.CRYSTAL_INFUSION_TABLE.get());
                         pOutput.accept(BlocksRegister.TANK.get());
                         pOutput.accept(BlocksRegister.INFUSER.get());
-                        pOutput.accept(BlocksRegister.LIGHTING.get());
                    })
                     .build()
     );

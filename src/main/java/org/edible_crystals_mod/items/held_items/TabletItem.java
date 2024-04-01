@@ -21,7 +21,9 @@ import org.edible_crystals_mod.abilities_and_effects.custom_effects.movement.Lau
 import org.edible_crystals_mod.abilities_and_effects.custom_effects.projectile.BlockBreakingProjectile;
 import org.edible_crystals_mod.abilities_and_effects.custom_effects.projectile.ItemEffects;
 import org.edible_crystals_mod.renderers.item.ItemRenderer;
+import org.edible_crystals_mod.sounds.ModSounds;
 import org.jetbrains.annotations.Nullable;
+import particle.ModParticles;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
@@ -33,15 +35,16 @@ import java.util.function.Consumer;
 
 public class TabletItem extends Item implements GeoItem {
 
-//    private static final RawAnimation POPUP_ANIM = RawAnimation.begin().thenPlay("use.popup");
-    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-    private static final String key = "edible_mod_effects";
-
-    private static boolean modeSelect;
-
     public TabletItem(Properties pProperties) {
         super(pProperties);
     }
+
+//    private static final RawAnimation POPUP_ANIM = RawAnimation.begin().thenPlay("use.popup");
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+    private  final String key = "edible_mod_effects";
+    private BlockBreakingProjectile fireProjectile;
+    boolean modeSelect = true;
+    boolean allowNewProjectile = true;
 
     @Override
     public boolean isFoil(ItemStack pStack) { return pStack.hasTag(); }
@@ -55,8 +58,10 @@ public class TabletItem extends Item implements GeoItem {
     public InteractionResult interactLivingEntity(ItemStack pStack, Player pPlayer, LivingEntity pInteractionTarget, InteractionHand pUsedHand) {
         if(pInteractionTarget instanceof Mob mob){
 
-            mob.addEffect(new MobEffectInstance(MobEffects.LEVITATION,5,50));
-            mob.addEffect(new MobEffectInstance(MobEffects.WITHER,100,0));
+            if(!mob.hasEffect(MobEffects.LEVITATION)){
+                mob.addEffect(new MobEffectInstance(MobEffects.LEVITATION, 5, 50));
+                mob.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 0));
+            }
 
             return InteractionResult.CONSUME;
         };
@@ -71,49 +76,32 @@ public class TabletItem extends Item implements GeoItem {
 
     @Override
     public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-        if(pEntity instanceof Player player ){
+        if (pEntity instanceof Player player) {
             boolean hasKey = pStack.getTag() != null && pStack.getTag().contains(key);
-            if (player.getOffhandItem() == pStack) {
 
+            if (player.getOffhandItem() == pStack) {
                 if (hasKey) {
                     Arrays.stream(pStack.getTag().getIntArray(key)).boxed().forEach(
                         getEffect -> player.addEffect(
-                            new MobEffectInstance(
-                                ItemEffects.effectMapItem.get(getEffect),
-                                2,
-                                1,
-                                true,
-                                true
-                            )
+                            new MobEffectInstance(ItemEffects.effectMapItem.get(getEffect), 2, 1, true, true)
                         )
                     );
                 }
             }
-            LaunchMovement.tickEvent(player, this, pLevel,4);
+            if (fireProjectile != null) { fireProjectile.onTickMove(); }
+            LaunchMovement.tickEvent(player, this, 4);
         }
         super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
     }
 
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player player, InteractionHand pUsedHand) {
         ItemStack itemsInHand = player.getItemInHand(pUsedHand);
-        double x = player.getX();
-        double y = player.getY();
-        double z = player.getZ();
-        float rotX = player.xRotO;
-        float rotY = player.yRotO;
 
-        double distance = 1.5; // adjust as needed
-
-        // Calculate the horizontal and vertical offsets based on player's rotation
-        double horizontalOffset = -Math.sin(Math.toRadians(player.yRotO)) * Math.cos(Math.toRadians(player.xRotO)) * distance;
-        double verticalOffset = Math.sin(-Math.toRadians(player.xRotO)) * distance; // Adjusted for the offset when looking up
-
-        // Calculate the spawn position based on player's rotation
-        double spawnX = player.getX() + horizontalOffset;
-        double spawnY = player.getY() + player.getEyeHeight() + verticalOffset - 0.2; // Adjusted for eye height
-        double spawnZ = player.getZ() + Math.cos(Math.toRadians(player.yRotO)) * Math.cos(Math.toRadians(player.xRotO)) * distance;
-
+        if (allowNewProjectile || fireProjectile == null) {
+            fireProjectile = new BlockBreakingProjectile(player, pLevel);
+        }
         if (player.isShiftKeyDown()) {
             if(!pLevel.isClientSide){
                 modeSelect = !modeSelect;
@@ -127,13 +115,30 @@ public class TabletItem extends Item implements GeoItem {
             if (modeSelect) {
                 LaunchMovement.launchPlayerDirection(player, pLevel, 2.0f);
             } else {
-                BlockBreakingProjectile.fireProjectile(player, pLevel);
+
+                if (allowNewProjectile) {
+                    player.playSound(ModSounds.ORB_CREATE.get(), 0.6f,2.0f);
+
+
+                    double spawnX1 = player.getX() + -Math.sin(Math.toRadians(player.yRotO)) * Math.cos(Math.toRadians(player.xRotO)) * 1.5;
+                    double spawnY2 = player.getY() + player.getEyeHeight() + Math.sin(-Math.toRadians(player.xRotO)) * 1.5 - 0.5;
+                    double spawnZ3 = player.getZ() + Math.cos(Math.toRadians(player.yRotO)) * Math.cos(Math.toRadians(player.xRotO)) * 1.5;
+
+                    pLevel.addParticle(ModParticles.PROJECTILE_PARTICLES.get(), spawnX1,spawnY2,spawnZ3,1,1,1);
+                    fireProjectile.fireProjectile();
+                    if(!pLevel.isClientSide){
+                        allowNewProjectile = false;
+                    }
+                } else {
+                    fireProjectile.onRelease();
+                    if(!pLevel.isClientSide){
+                        fireProjectile = null;
+                        allowNewProjectile = true;
+                    }
+                }
             }
         }
-
-
-
-        return InteractionResultHolder.pass(itemsInHand);
+        return InteractionResultHolder.fail(itemsInHand);
     }
 
 

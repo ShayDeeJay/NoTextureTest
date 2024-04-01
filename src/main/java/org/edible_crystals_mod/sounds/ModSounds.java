@@ -14,6 +14,7 @@ public class ModSounds {
 
     public static final RegistryObject<SoundEvent> DASH_EFFECT = registerSoundEvents("dash_effect");
 
+    public static final RegistryObject<SoundEvent> ORB_CREATE = registerSoundEvents("orb_create");
 
     private static RegistryObject<SoundEvent> registerSoundEvents(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(EdibleCrystalMod.MOD_ID, name)));

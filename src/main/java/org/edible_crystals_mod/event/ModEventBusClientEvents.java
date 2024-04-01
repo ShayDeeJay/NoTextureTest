@@ -38,13 +38,11 @@ public class ModEventBusClientEvents {
             helper -> helper.register(new ResourceLocation(EdibleCrystalMod.MOD_ID, "tablet_of_rex"), new TabletItem(new Item.Properties()))
         );
     }
-
+    
     @SubscribeEvent
     public void registerParticleFactories(final RegisterParticleProvidersEvent event) {
 
         event.registerSpriteSet(ModParticles.PROJECTILE_PARTICLES.get(), ProjectileParticles.Provider::new);
-
-//        Minecraft.getInstance().particleEngine.register(ModParticles.PROJECTILE_PARTICLES.get(), ProjectileParticles.Provider::new);
     }
 
 }

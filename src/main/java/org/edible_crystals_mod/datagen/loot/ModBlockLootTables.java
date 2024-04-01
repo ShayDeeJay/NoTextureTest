@@ -3,6 +3,7 @@ package org.edible_crystals_mod.datagen.loot;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -27,6 +28,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropSelf(BlocksRegister.CRYSTAL_INFUSION_TABLE.get());
         this.dropSelf(BlocksRegister.TANK.get());
         this.dropSelf(BlocksRegister.INFUSER.get());
+        this.dropOther(BlocksRegister.LIGHTING.get(), Items.AIR);
 
         this.add(BlocksRegister.CRYSTAL_ORE.get(),
             block -> createCopperLikeOreDrops(BlocksRegister.CRYSTAL_ORE.get(), EffectMaps.EDIBLE_CRYSTAL_FRAGMENT.get()));

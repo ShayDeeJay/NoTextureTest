@@ -4,5 +4,11 @@
     "sounds": [
       "ediblecrystals:dash_effect"
     ]
+  },
+  "orb_create": {
+    "subtitles": "sounds.ediblecrystals.orb_create",
+    "sounds": [
+      "ediblecrystals:orb_create"
+    ]
   }
 }

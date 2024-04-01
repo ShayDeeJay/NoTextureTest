@@ -44,16 +44,16 @@ public class ProjectileParticles extends TextureSheetParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
     @OnlyIn(Dist.CLIENT)
     public static class Provider implements ParticleProvider<SimpleParticleType> {
 
-        private final SpriteSet sprite;
+        private final SpriteSet sprites;
 
         public Provider(SpriteSet spriteSet) {
-            this.sprite = spriteSet;
+            this.sprites = spriteSet;
         }
 
         @Nullable
@@ -65,7 +65,7 @@ public class ProjectileParticles extends TextureSheetParticle {
             double pXSpeed, double pYSpeed, double pZSpeed
         ) {
 
-            return new ProjectileParticles(pLevel, pX,pY,pZ, this.sprite, pXSpeed, pYSpeed, pZSpeed );
+            return new ProjectileParticles(pLevel, pX,pY,pZ, this.sprites, pXSpeed, pYSpeed, pZSpeed );
         }
     }
 }
